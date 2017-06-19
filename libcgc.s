@@ -117,15 +117,16 @@
 
 ENTER	_start
 	call _crcx
+	call _run_ctors
 	call main
 	pushl %eax
 	call _terminate
 END	_start
 
-ENTER	_terminate
+ENTER	__terminate
 	sys_call 1
 	syscall_arg_1
-END	_terminate
+END	__terminate
 
 ENTER transmit
 	sys_call 2

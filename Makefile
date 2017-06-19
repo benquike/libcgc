@@ -15,14 +15,20 @@ all: libcgc.a \
 	allocate.2.gz deallocate.2.gz fdwait.2.gz random.2.gz receive.2.gz \
 	_terminate.2.gz transmit.2.gz cgcabi.2.gz
 
-libcgc.a: libcgc.o maths.o
-	$(AR) cruv $@ libcgc.o maths.o
+libcgc.a: libcgc.o maths.o terminate.o init_fini.o
+	$(AR) cruv $@ libcgc.o maths.o terminate.o init_fini.o
 
 libcgc.o: libcgc.s
 	$(AS) -o $@ $< $(ASFLAGS)
 
 maths.o: maths.s
 	$(AS) -o $@ $< $(ASFLAGS)
+
+terminate.o: terminate.c
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+init_fini.o: init_fini.c
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 install: libcgc.a
 	install -d $(LIBDIR)
@@ -40,4 +46,4 @@ install: libcgc.a
 	install -m 444 transmit.2.gz $(MANDIR)
 
 clean:
-	rm -f libcgc.[oa] *.2.gz maths.o
+	rm -f libcgc.[oa] *.2.gz maths.o *.o
