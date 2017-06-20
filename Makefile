@@ -6,6 +6,11 @@ PATH=/usr/i386-linux-cgc/bin:/bin:/usr/bin
 
 .SUFFIXES: .md .2.gz
 
+C_SRC   = $(wildcard *.c)
+ASM_SRC = $(wildcard *.s)
+OBJS    = $(C_SRC:%.c=%.o)
+OBJS   += $(ASM_SRC:%.s=%.o)
+
 ASFLAGS=
 
 %.2.gz: %.md
@@ -15,19 +20,14 @@ all: libcgc.a \
 	allocate.2.gz deallocate.2.gz fdwait.2.gz random.2.gz receive.2.gz \
 	_terminate.2.gz transmit.2.gz cgcabi.2.gz
 
-libcgc.a: libcgc.o maths.o terminate.o init_fini.o
-	$(AR) cruv $@ libcgc.o maths.o terminate.o init_fini.o
+libcgc.a: $(OBJS)
+	$(AR) cruv $@ $(OBJS)
 
-libcgc.o: libcgc.s
+
+%.o:%.s
 	$(AS) -o $@ $< $(ASFLAGS)
 
-maths.o: maths.s
-	$(AS) -o $@ $< $(ASFLAGS)
-
-terminate.o: terminate.c
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-init_fini.o: init_fini.c
+%.o:%.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 install: libcgc.a
@@ -46,4 +46,4 @@ install: libcgc.a
 	install -m 444 transmit.2.gz $(MANDIR)
 
 clean:
-	rm -f libcgc.[oa] *.2.gz maths.o *.o
+	rm -f libcgc.[oa] *.2.gz $(OBJS)
