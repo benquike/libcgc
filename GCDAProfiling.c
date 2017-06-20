@@ -111,7 +111,7 @@ static char filename[1024];
 /*
  * Buffer that we write things into.
  */
-#define WRITE_BUFFER_SIZE (16 * 1024 * 1024)
+#define WRITE_BUFFER_SIZE (512 * 1024)
 static char *write_buffer = NULL;
 static uint64_t cur_buffer_size = 0;
 static uint64_t cur_pos = 0;
