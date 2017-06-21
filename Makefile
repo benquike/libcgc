@@ -28,7 +28,7 @@ libcgc.a: $(OBJS)
 	$(AS) -o $@ $< $(ASFLAGS)
 
 %.o:%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -g -o $@ $< $(CFLAGS)
 
 install: libcgc.a
 	install -d $(LIBDIR)
