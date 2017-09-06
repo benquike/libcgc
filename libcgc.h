@@ -5,14 +5,17 @@
 #define STDOUT 1
 #define STDERR 2
 
+#if !defined(NULL)
 #define	NULL ((void *)0)
-
-typedef long unsigned int size_t;
-typedef long signed int ssize_t;
+#endif
 
 #define SSIZE_MAX	2147483647
 #define SIZE_MAX	4294967295
 #define	FD_SETSIZE	1024
+
+#if !defined(_CGC_EMU)
+typedef long unsigned int size_t;
+typedef long signed int ssize_t;
 
 typedef long int _fd_mask;
 
@@ -47,18 +50,45 @@ struct timeval {
 #define	ENOSYS		5
 #define	EPIPE		6
 
+#else
+
+#include <errno.h>
+
+// definitions of fd_set etc
+#include <sys/select.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+// #include <stdlib.h>
+
+extern void exit(int status);
+extern void *valloc(size_t size);
+extern void free(void *ptr);
+
+// the error codes
+#include <errno.h>
+#include <setjmp.h>
+
+// for allocate
+// mprotect
+#include <sys/mman.h>
+
+#endif /* !defined(_CGC_EMU) */
+
 void _terminate(unsigned int status) __attribute__((__noreturn__));
 int transmit(int fd, const void *buf, size_t count, size_t *tx_bytes);
 int receive(int fd, void *buf, size_t count, size_t *rx_bytes);
 int fdwait(int nfds, fd_set *readfds, fd_set *writefds,
-	   const struct timeval *timeout, int *readyfds);
+	   struct timeval *timeout, int *readyfds);
 int allocate(size_t length, int is_X, void **addr);
 int deallocate(void *addr, size_t length);
 int random(void *buf, size_t count, size_t *rnd_bytes);
 
+#if !defined(_CGC_EMU)
 typedef struct { long _b[8]; } jmp_buf[1];
 int setjmp(jmp_buf) __attribute__((__returns_twice__));
 void longjmp(jmp_buf, int) __attribute__((__noreturn__));
+#endif /* !defined(_CGC_EMU) */
 
 float sinf(float); double sin(double); long double sinl(long double);
 float cosf(float); double cos(double); long double cosl(long double);
