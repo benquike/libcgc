@@ -18,8 +18,8 @@ ASFLAGS=
 PATH=/usr/i386-linux-cgc/bin:/bin:/usr/bin
 else
 # HOST OS
-CFLAGS= -m32 -c -D_CGC_EMU
-ASFLAGS= -m32 -c
+CFLAGS= -m32 -c -fsanitize=address -D_CGC_EMU
+ASFLAGS= -m32 -c -fsanitize=address
 
 CC=clang
 AS=$(CC)
