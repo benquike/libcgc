@@ -18,7 +18,7 @@ ASFLAGS=
 PATH=/usr/i386-linux-cgc/bin:/bin:/usr/bin
 else
 # HOST OS
-CFLAGS= -m32 -D_CGC_EMU
+CFLAGS= -m32 -c -D_CGC_EMU
 ASFLAGS= -m32 -c
 
 CC=clang
@@ -41,7 +41,7 @@ libcgc.o: libcgc.s
 else
 #HOST OS
 libcgc.o: libcgc.c
-	$(CC) -o $@ -c $(CFLAGS) $<
+	$(CC) -o $@ $(CFLAGS) $<
 endif
 
 libcgc.a: libcgc.o maths.o

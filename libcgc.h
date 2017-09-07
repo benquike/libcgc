@@ -52,8 +52,6 @@ struct timeval {
 
 #else
 
-#include <errno.h>
-
 // definitions of fd_set etc
 #include <sys/select.h>
 #include <sys/time.h>
