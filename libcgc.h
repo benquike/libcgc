@@ -52,12 +52,19 @@ struct timeval {
 
 #else
 
-// definitions of fd_set etc
-#include <sys/select.h>
+#ifndef	__size_t_defined
+typedef long unsigned int size_t;
+#define __size_t_defined
+#define _SIZE_T
+#endif
+
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
-// #include <stdlib.h>
+#include <errno.h>
+
+// definitions of fd_set etc
+#include <sys/select.h>
 
 extern void exit(int status);
 extern void *valloc(size_t size);
